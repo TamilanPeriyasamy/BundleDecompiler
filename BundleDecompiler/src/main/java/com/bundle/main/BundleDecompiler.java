@@ -107,13 +107,5 @@ public class BundleDecompiler {
             decompiler.decompile();
             FileUtils.deleteDirectory(new File(FilePaths.mTempDirPath));
         }
-        if (mBundleBuild) {
-            System.out.println("\nInput Decompile dir: "+mInput_File_Dir);
-            BuildManager buildManager = new BuildManager();
-            buildManager.buildAppBundle();
-            SignAppBundle signAppBundle = new SignAppBundle();
-            signAppBundle.signedAppBunle();
-            FileUtils.deleteDirectory(new File(FilePaths.mTempDirPath));
-        }
     }
 }
