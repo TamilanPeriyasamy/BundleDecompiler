@@ -55,12 +55,32 @@ public class FilePaths {
 	public static String mInstallApksPath       = null;
 	public static String mOutputManifestDir     = null;
 	public static String mOutputResDir          = null;
-	public static String mAndroidToolsDir   = "/tmp/BundleDecompiler";
+
+	public static  String sharedLinks[] = {
+			"https://www.dropbox.com/s/f4yo09tdvkgs75j/aapt2",
+			"https://www.dropbox.com/s/6sca4mouyjql4dh/android.jar",
+			"https://www.dropbox.com/s/jkrldlbdneixeaq/libc%2B%2B.so",
+			"https://www.dropbox.com/s/sv0dern26i3pike/bundletool.jar",
+			"https://www.dropbox.com/s/krdnoj2ia1iea11/framework.apk",
+			"https://www.dropbox.com/s/pudf2jum77mqifp/key-store.jks"};
+
+	public static String mAndroidToolsDir       = "/tmp/BundleDecompiler";
+	public static String mToolsVersionDir       = mAndroidToolsDir+"/29.0.2";
+	public static String mToolsLib64Dir         = mToolsVersionDir+"/lib64";
+
+	public static  String toolsList[] = {
+			mAndroidToolsDir+"/bundletool.jar",
+			mAndroidToolsDir+"/framework.apk",
+			mAndroidToolsDir+"/key-store.jks",
+			mToolsVersionDir+"/aapt2",
+			mToolsVersionDir+"/android.jar",
+			mToolsLib64Dir +"/libc++.so"};
+
 	public static String mFrameworkPath     = mAndroidToolsDir+"/framework.apk";
 	public static String mBundleToolJarPath = mAndroidToolsDir+"/bundletool.jar";
 	public static String mKeyStorePath      = mAndroidToolsDir+"/key-store.jks";
-	public static String mAAPT2Path         = mAndroidToolsDir+"/29.0.2/aapt2";
-	public static String mAndroidJarPath    = mAndroidToolsDir+"/29.0.2/android.jar";
+	public static String mAAPT2Path         = mToolsVersionDir+"/aapt2";
+	public static String mAndroidJarPath    = mToolsVersionDir+"/android.jar";
 
 	FilePaths(){
 		mInputFilePath         = null;

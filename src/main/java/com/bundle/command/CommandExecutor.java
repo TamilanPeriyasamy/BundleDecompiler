@@ -14,8 +14,8 @@ import static java.lang.System.out;
 
 public class CommandExecutor {
 
-    File mBaseApkFile = null;
-    String mTempShellScript = null;
+    File mBaseApkFile       = null;
+    String mTempShellScript = "/tmp/temp.sh";
 
     public CommandExecutor() {
     }
@@ -25,7 +25,7 @@ public class CommandExecutor {
     }
 
     public boolean getStreamDefaultExecutor(String runCommand, boolean printLog) throws Exception {
-        mTempShellScript = FilePaths.mTempDirPath + File.separator + "temp.sh";
+
         FileWriter writer = new FileWriter(mTempShellScript, false);
         BufferedWriter bufferWriter = new BufferedWriter(writer);
         bufferWriter.write(runCommand);
@@ -60,6 +60,31 @@ public class CommandExecutor {
         return false;
     }
 
+    public boolean executeCommand(String runCommand) throws Exception {
+        Runtime rt = Runtime.getRuntime();
+        Process process = rt.exec(runCommand);
+       /*BufferedReader inputStreamReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+        String infoLine = null;
+        while ((infoLine = inputStreamReader.readLine()) != null) {
+                out.println(infoLine);
+        }
+        inputStreamReader.close();
+        BufferedReader errorStreamReader = new BufferedReader(new InputStreamReader(process.getErrorStream()));
+        String errorLine = null;
+        while ((errorLine = errorStreamReader.readLine()) != null) {
+            out.println(errorLine);
+        }
+        errorStreamReader.close();*/
+        process.waitFor();
+        process.destroy();
+        final int exitValue = process.waitFor();
+        process.destroy();
+        if (exitValue == 0) {
+            return true;
+        }
+        return false;
+    }
+
     public boolean executeCommand(String runCommand, boolean printLog) throws Exception {
         Runtime rt = Runtime.getRuntime();
         Process process = rt.exec(runCommand);
@@ -74,7 +99,7 @@ public class CommandExecutor {
         BufferedReader errorStreamReader = new BufferedReader(new InputStreamReader(process.getErrorStream()));
         String errorLine = null;
         while ((errorLine = errorStreamReader.readLine()) != null) {
-            out.println(errorLine);
+                out.println(errorLine);
         }
         errorStreamReader.close();
         process.waitFor();
@@ -156,7 +181,6 @@ public class CommandExecutor {
 
 
     public ArrayList<String> getStreamDefaultExecutor(String command, File mApkFile) throws IOException, InterruptedException {
-
         String mTempFile = FilePaths.mTempDirPath + File.separator + "temp.java";
         ArrayList<String> inputStream = new ArrayList<String>();
         String runCommand = FilePaths.mAAPT2Path + " " + command + " " + mApkFile.getAbsolutePath();

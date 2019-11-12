@@ -30,6 +30,7 @@ public class EncodeDecodeException extends Exception {
         INVALID_ARGS,
 		DECOMPILE_FAILED,
 		BUILD_FAILED,
+        BUILD_APKS_FAILED,
         SIGNING_FAILED,
         AAPT_FILE_REMOVE_FAILED,
         AAPT_FILE_ADDED_FAILED,
@@ -47,7 +48,12 @@ public class EncodeDecodeException extends Exception {
 
 			case BUILD_FAILED:
 				EncodeDecodeException.exceptionMessage = "'BUILD_FAILED'";
-				break;
+				break;//BUILD_APKS_FAILED
+
+            case BUILD_APKS_FAILED:
+                EncodeDecodeException.exceptionMessage = "'BUILD_APKS_FAILED'";
+                break;//BUILD_APKS_FAILED
+
 			case DECOMPILE_FAILED:
 				EncodeDecodeException.exceptionMessage = "'DECOMPILE_FAILED'";
 				break;

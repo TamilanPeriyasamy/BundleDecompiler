@@ -2,6 +2,8 @@ package com.bundle.main;
 
 import com.bundle.decompile.DecompileManger;
 import com.bundle.exception.EncodeDecodeException;
+import com.bundle.recompile.BuildManager;
+import com.bundle.signbundle.SignAppBundle;
 import com.bundle.utils.FilePaths;
 import com.bundle.utils.LogFileGenerator;
 import org.apache.commons.io.FileUtils;
@@ -24,24 +26,19 @@ public class BundleDecompiler {
         if (args.length != 3) {
             throw new EncodeDecodeException(EncodeDecodeException.ExceptionCode.ARGS_MISMATCHED);
         }
-        String decodeEncodeMode = args[0];
-        String mInputFileDir    = args[1];
-        String mOutputFileDir   = args[2];
-
-        decodeEncodeMode = "decompile";
-        mInputFileDir    = "--in=/home/lakeba13/MyDev/App_Bundles/MyApp.aab";
-        mOutputFileDir   = "--out=/home/lakeba13/workspace/LakebaSecurityFrameworkMobile/BundleDecompiler/debug";
-        doRunBundleDecompiler(decodeEncodeMode, mInputFileDir, mOutputFileDir);
-
-        decodeEncodeMode = "build";
-        mInputFileDir = "--in=/home/lakeba13/workspace/LakebaSecurityFrameworkMobile/BundleDecompiler/debug/MyApp";
-        mOutputFileDir = "--out=/home/lakeba13/workspace/LakebaSecurityFrameworkMobile/BundleDecompiler/output/MyApp.aab";
-        doRunBundleDecompiler(decodeEncodeMode, mInputFileDir, mOutputFileDir);
-
+        if(mDebugMode) {
+            Testing testing = new Testing();
+            testing.testBuild(args);
+        }else {
+            String decodeEncodeMode = args[0];
+            String mInputFileDir = args[1];
+            String mOutputFileDir = args[2];
+            doRunBundleDecompiler(decodeEncodeMode, mInputFileDir, mOutputFileDir);
+        }
         LogFileGenerator.toStopWriteLogFile();
     }
 
-    private static void doRunBundleDecompiler(String decodeEncodeMode, String mInputFileDir, String mOutputFileDir) throws Exception {
+    public static void doRunBundleDecompiler(String decodeEncodeMode, String mInputFileDir, String mOutputFileDir) throws Exception {
 
 
         if (decodeEncodeMode.trim().equals("decompile") || decodeEncodeMode.trim().equals("d")) { // build or decompile
@@ -59,6 +56,7 @@ public class BundleDecompiler {
         }
         if (mInputFileDir.trim().startsWith("--in=")) { // mInputFile or mInputDir
             mInput_File_Dir = mInputFileDir.substring(mInputFileDir.indexOf("--in=") + 5).trim();
+            System.out.println(""+mInput_File_Dir);
             if (!new File(mInput_File_Dir).exists()) {
                 throw new EncodeDecodeException(EncodeDecodeException.ExceptionCode.INVALID_ARGS);
             }
@@ -103,6 +101,14 @@ public class BundleDecompiler {
             System.out.println("\nInput App Bundle path: "+mInput_File_Dir);
             DecompileManger decompiler = new DecompileManger();
             decompiler.decompile();
+            FileUtils.deleteDirectory(new File(FilePaths.mTempDirPath));
+        }
+        if (mBundleBuild) {
+            System.out.println("\nInput Decompile dir: "+mInput_File_Dir);
+            BuildManager buildManager = new BuildManager();
+            buildManager.buildAppBundle();
+            SignAppBundle signAppBundle = new SignAppBundle();
+            signAppBundle.signedAppBunle();
             FileUtils.deleteDirectory(new File(FilePaths.mTempDirPath));
         }
     }
