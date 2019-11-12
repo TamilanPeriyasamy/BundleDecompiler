@@ -1,22 +1,17 @@
-# ApkDecompiler
-    ApkDecompiler is a tool for reverse engineering Android APK files.
-    This tool decode apk resources and rebuild them after making some modifications.
+# BundleDecompiler
+    BundleDecompiler is a tool for reverse engineering Android .aab files.
+    This tool decode .aab resources(.xml's) and sources(.dex's).
  
 ### USAGE: ApkDecompiler < command > [options]
-    ApkDecompiler decompile
-    ApkDecompiler build
+    BundleDecompiler decompile
   
 ### EXAMPLE:
-    java -jar ApkDecompiler.jar decompile    -in app.apk   -out app-dir
-    java -jar ApkDecompiler.jar build        -in app-dir   -out app.apk 
-    java -jar ApkDecompiler.jar build -sign  -in app-dir   -out app.apk 
+    java -jar BundleDecompiler.jar decompile    --in=app.aab   -out app-dir
 
 ### COMMANDS
-    decompile   Decompile the provided APK resources
-    build       Build decompiled APK resources files
-    -in         Input file or Input Directory
-    -out        Output file or Output Directory
-    -sign       Sign the provided APK (use a test certificate)
+    decompile   Decompile the provided .aab resources
+    -in         Input file .aab file
+    -out        Output decompile Directory
 
     
 ### DOWNLOAD JAR 
