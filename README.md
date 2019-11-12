@@ -6,12 +6,12 @@
     BundleDecompiler decompile
   
 ### EXAMPLE:
-    java -jar BundleDecompiler.jar decompile    --in=app.aab   -out app-dir
+    java -jar BundleDecompiler.jar decompile    --in=app.aab   --out=app-dir
 
 ### COMMANDS
     decompile   Decompile the provided .aab resources
-    -in         Input file .aab file
-    -out        Output decompile Directory
+    --in=         Input file .aab file
+    --out=        Output decompile Directory
 
     
 ### DOWNLOAD JAR 
