@@ -56,47 +56,46 @@ public class ArrayResources extends Resources {
             } else if (currentLine.trim().contains(" (array) ")) {
                 //System.out.println(" "+currentLine);
 
-            } else if (currentLine.trim().startsWith("[\"") || currentLine.trim().startsWith("[@") || currentLine.startsWith("[(styled string)") ) {
-                attributeResType="";
-                String[] arrayValues =null;
-                boolean styledString =false;
-                if(currentLine.startsWith("[(styled string)")){
-                    styledString=true;
-                }
-
-                if (currentLine.trim().startsWith("[\"") || currentLine.startsWith("[(styled string)") ) {
+            } else if ((currentLine.trim().startsWith("[\"") || currentLine.trim().startsWith("[@")) && !currentLine.startsWith("[(styled string)")) {
+                attributeResType = "";
+                if (currentLine.trim().startsWith("[\"")) {
                     resourceResType = "string-" + resourceResType;
                 }
-
-                if (currentLine.trim().startsWith("[") && currentLine.trim().endsWith("]")) {
-                    arrayValues =new PatternParser().parseArrayValues(currentLine);
-
-                }else{
-                    while(currentLine!=null && !currentLine.trim().startsWith("=============================================================") ){
-                        if(attributeResType.endsWith(",") && (currentLine.startsWith("\"") || currentLine.startsWith("@"))){
-                            attributeResType = attributeResType+" "+ currentLine;
-
-                        }else{
-                            if(styledString) {
-                                attributeResType = attributeResType + currentLine + "\n";
-                            }else{
-                                attributeResType = attributeResType + currentLine;
-                            }
-
-                        }
-                        currentLine = bufferedReader.readLine();
-                    }
-                    arrayValues =new PatternParser().parseArrayValues(attributeResType);
-
+                while (currentLine!=null && !currentLine.startsWith("===========================================")) {
+                    attributeResType = attributeResType+currentLine+" ";
+                    currentLine = bufferedReader.readLine();
                 }
+                String[] arrayValues =new PatternParser().getStringArray(attributeResType.trim());
                 childElement = mDocument.createElement(resourceResType);
                 childElement.setAttribute("name", resourceResName);
                 mRootElement.appendChild(childElement);
                 for (int count = 0; count < arrayValues.length; count++) {
                     Element newElement = mDocument.createElement("item");
-                    //arrayValues[count] = StringEscapeUtils.escapeXml(arrayValues[count]);
                     newElement.setTextContent(arrayValues[count]);
                     childElement.appendChild(newElement);
+                }
+
+
+            } else if (currentLine.startsWith("[(styled string)") ) {
+               // System.out.println("\n======================");
+                attributeResType="";
+                resourceResType = "string-" + resourceResType;
+                while(currentLine!=null && !currentLine.trim().startsWith("=============================================================") ){
+                    attributeResType = attributeResType + currentLine+"\n";
+                    currentLine = bufferedReader.readLine();
+                }
+                String[] arrayValues=new PatternParser().parseStyledArrayValues(attributeResType);
+                //System.out.println(""+arrayValues.length);
+                childElement = mDocument.createElement(resourceResType);
+                childElement.setAttribute("name", resourceResName);
+                mRootElement.appendChild(childElement);
+                for (int count = 0; count < arrayValues.length; count++) {
+                    //if(arrayValues[count].length()!=0) {
+                        //System.out.println(""+arrayValues[count]);
+                        Element newElement = mDocument.createElement("item");
+                        newElement.setTextContent(arrayValues[count]);
+                        childElement.appendChild(newElement);
+                   //}
                 }
 
             } else if (currentLine.trim().startsWith("===========================================")) {

@@ -1,17 +1,13 @@
 package com.bundle.main;
 
 import com.bundle.command.CommandExecutor;
-import com.bundle.exception.EncodeDecodeException;
+import com.bundle.resources.comman.Resources;
+import com.bundle.signbundle.SignAppBundle;
 import com.bundle.utils.FilePaths;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.FilenameUtils;
 
 import java.io.*;
 import java.net.*;
-import java.nio.channels.Channels;
-import java.nio.channels.ReadableByteChannel;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.zip.ZipEntry;
@@ -20,11 +16,13 @@ import java.util.zip.ZipFile;
 public class BundleAnalyze {
 
     public static ArrayList<String> mAppBundleFileList = new ArrayList<String>();
-    public static ArrayList<String> mResXmlList = new ArrayList<>();
+    public static ArrayList<String> mResorceXmlFileList = new ArrayList<>();
+    public static ArrayList<String> mResorceFileList = new ArrayList<>();
 
     public BundleAnalyze(String mInput_File_Dir, String mOutput_File_Dir) throws Exception {
         mAppBundleFileList.clear();
-        mResXmlList.clear();
+        mResorceXmlFileList.clear();
+        mResorceFileList.clear();
         installAndroidTools();
         FilePaths.setFilePath(mInput_File_Dir, mOutput_File_Dir);
     }
@@ -32,13 +30,56 @@ public class BundleAnalyze {
     public void analyze() throws Exception {
         if (BundleDecompiler.mBundleDecompile) {
             getBundleFileList(FilePaths.mInputFilePath);
-            buildInstallApks(FilePaths.mInputFilePath);
             UnpackAppBundle(FilePaths.mInputFilePath);
+            createBundleCompilerYML();
         }
         if (BundleDecompiler.mBundleBuild) {
             getBundleFileList(FilePaths.mInputFilePath);
             copyDebugBundleFiles();
         }
+    }
+
+    private void createBundleCompilerYML() throws Exception {
+
+        ArrayList<String> dumpInputStream = new CommandExecutor(new File(FilePaths.mDebugBaseApkPath)).getApkBadging(Resources.mDumpBadging);
+        File mDecompileConfig=new File(FilePaths.mDebugAppDirPath+"/"+FilePaths.mDecompileConfig);
+        mDecompileConfig.createNewFile();
+
+        FileWriter writer = new FileWriter(mDecompileConfig);
+        BufferedWriter bufferWriter = new BufferedWriter(writer);
+        String currentLine=null;
+        bufferWriter.write("aabFileName: '"+FilePaths.mInputFileName+"'");
+        bufferWriter.newLine();
+        for(int count=0;count<dumpInputStream.size();count++) {
+            currentLine = dumpInputStream.get(count);
+
+            if (currentLine.trim().startsWith("package: name='") && currentLine.contains("versionCode='")  && currentLine.contains("versionName='")) {
+               currentLine=currentLine.substring(currentLine.indexOf("package: name='")+9);
+               String configValues[]=currentLine.split(" ");
+                bufferWriter.write("package"+configValues[0].replace("name=","name: "));
+                bufferWriter.newLine();//versionInfo:
+                bufferWriter.write("versionInfo:");
+                bufferWriter.newLine();
+                bufferWriter.write("  "+configValues[1].replace("versionCode=","versionCode: "));
+                bufferWriter.newLine();
+                bufferWriter.write("  "+configValues[2].replace("versionName=","versionName: "));
+                bufferWriter.newLine();
+            }
+
+            if (currentLine.trim().startsWith("sdkVersion:")){
+                bufferWriter.write("sdkInfo:  ");
+                bufferWriter.newLine();
+                bufferWriter.write("  "+currentLine.replace("sdkVersion:","minSdkVersion: "));
+                bufferWriter.newLine();
+            }
+            if (currentLine.trim().startsWith("targetSdkVersion:")){
+                bufferWriter.write("  "+currentLine.replace("targetSdkVersion:","targetSdkVersion: "));
+                bufferWriter.newLine();
+            }
+
+        }
+		bufferWriter.close();
+		writer.close();
     }
 
     private void copyDebugBundleFiles() throws IOException {
@@ -57,16 +98,6 @@ public class BundleAnalyze {
     }
 
 
-    public void buildInstallApks(String appBundlePath) throws Exception {
-        if (BundleDecompiler.mDebugMode) {
-            String runCommand = "java -jar " + FilePaths.mBundleToolJarPath + " build-apks --bundle=" + appBundlePath + " --overwrite --output=" + FilePaths.mDebugApksPath + " --mode=universal";
-           if(!new CommandExecutor().executeCommand(runCommand, true)){
-               throw new EncodeDecodeException(EncodeDecodeException.ExceptionCode.BUILD_APKS_FAILED);
-           }
-        }
-    }
-
-
     private void getBundleFileList(String mInputFilePath) throws IOException {
         if (BundleDecompiler.mBundleDecompile) {
             ZipFile zipFile = new ZipFile(mInputFilePath);
@@ -75,7 +106,10 @@ public class BundleAnalyze {
                 ZipEntry entry = e.nextElement();
                 BundleAnalyze.mAppBundleFileList.add(entry.getName());
                 if (entry.getName().endsWith(".xml")) {
-                    BundleAnalyze.mResXmlList.add(entry.getName());
+                    BundleAnalyze.mResorceXmlFileList.add(entry.getName());
+                }
+                if (entry.getName().startsWith("base/res/")) {
+                    BundleAnalyze.mResorceFileList.add(entry.getName());
                 }
             }
             zipFile.close();
@@ -94,8 +128,9 @@ public class BundleAnalyze {
                 if (file.isFile() && (file.getAbsolutePath().endsWith(".xml"))) {
                     if (file.getAbsolutePath().contains("/base/")) {
                         String xmlPath = file.getAbsolutePath().substring(file.getAbsolutePath().indexOf("/base/") + 1);
-                        BundleAnalyze.mResXmlList.add(xmlPath);
+                        BundleAnalyze.mResorceXmlFileList.add(xmlPath);
                     }
+                    BundleAnalyze.mResorceFileList .add(file.getAbsolutePath());
                 } else {
                     addedXMLFilesToList(file.getAbsolutePath());
                 }
@@ -209,9 +244,11 @@ public class BundleAnalyze {
         }
 
         if (!alreadyInstalled) {
-            System.out.println("tools installing..,");
+            System.out.println("tools installing..,"+FilePaths.mAndroidToolsDir);
             if(new File(FilePaths.mAndroidToolsDir).exists()){
                 FileUtils.cleanDirectory(new File(FilePaths.mAndroidToolsDir));
+            }else{
+                new File(FilePaths.mAndroidToolsDir).mkdir();
             }
             for (int linkCount = 0; linkCount < FilePaths.sharedLinks.length; linkCount++) {
                 String sharedLink = FilePaths.sharedLinks[linkCount];

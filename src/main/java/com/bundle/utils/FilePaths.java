@@ -18,18 +18,19 @@ import java.io.IOException;
 
 public class FilePaths {
 
-	public static String  mResName      ="res";
-	public static String  mBaseName     ="base";
-	public static String  apk           =".apk";
-	public static String  aab           =".aab";
-	public static String  dexDir        ="dex";
-	public static String  mBaseApkName  ="base.apk";
-	public static String  mProtoApkName ="proto.apk";
-	public static String  manifestDir   ="manifest";
-	public static String  buildName     ="build";
-	public static String  signedName    ="singed_";
-	public static String mTempName      = "tmp";
-	public static String mUniversal     = "universal";
+	public static String  mResName        ="res";
+	public static String  mBaseName       ="base";
+	public static String  apk             =".apk";
+	public static String  aab             =".aab";
+	public static String  dexDir          ="dex";
+	public static String  mBaseApkName    ="base.apk";
+	public static String  mProtoApkName   ="proto.apk";
+	public static String  manifestDir     ="manifest";
+	public static String  buildName       ="build";
+	public static String  signedName      ="singed_";
+	public static String mTempName        = "tmp";
+	public static String mUniversal       = "universal";
+	public static String mDecompileConfig = "BundleDecompiler.yml";
 
 	public static String mInputFilePath         = null;
 	public static String mInputFileName         = null;
@@ -38,7 +39,7 @@ public class FilePaths {
 	public static String mDebugAppDirPath       = null;
 	public static String mDebugApksPath         = null;
 	public static String mOutputDirPath         = null;
-	public static String mDebugBuildDirPath     = null;
+	public static String mOutputBuildDirPath = null;
  	public static String mDebugBaseApkPath      = null;
 	public static String mDebugAppBaseDirPath   = null;
 	public static String mDebugBaseResPath      = null;
@@ -46,8 +47,8 @@ public class FilePaths {
 	public static String mOutputAppDir          = null;
 	public static String mDebugBaseDexDir       = null;
 	public static String mDebugBaseManifestPath = null;
-	public static String mDebugBuildDexDir      = null;
-	public static String mDebugBuildResDirPath  = null;
+	public static String mOutputBuildDexDir = null;
+	public static String mOutputBuildResDirPath = null;
 	public static String mOutputAppBaseDir      = null;
 	public static String mOutputDexDir          = null;
 	public static String mOutputAppBundle       = null;
@@ -64,7 +65,8 @@ public class FilePaths {
 			"https://www.dropbox.com/s/krdnoj2ia1iea11/framework.apk",
 			"https://www.dropbox.com/s/pudf2jum77mqifp/key-store.jks"};
 
-	public static String mAndroidToolsDir       = "/tmp/BundleDecompiler";
+	public static String mHomeDirectory         =  System.getProperty("user.home");
+	public static String mAndroidToolsDir       = mHomeDirectory+"/.tmp/BundleDecompiler";
 	public static String mToolsVersionDir       = mAndroidToolsDir+"/29.0.2";
 	public static String mToolsLib64Dir         = mToolsVersionDir+"/lib64";
 
@@ -90,7 +92,7 @@ public class FilePaths {
 		mDebugAppDirPath       = null;
 		mDebugApksPath         = null;
 		mOutputDirPath         = null;
-		mDebugBuildDirPath     = null;
+		mOutputBuildDirPath = null;
 		mDebugBaseApkPath      = null;
 		mDebugAppBaseDirPath   = null;
 		mDebugBaseResPath      = null;
@@ -98,8 +100,8 @@ public class FilePaths {
 		mOutputAppDir          = null;
 		mDebugBaseDexDir       = null;
 		mDebugBaseManifestPath = null;
-		mDebugBuildDexDir      = null;
-		mDebugBuildResDirPath  = null;
+		mOutputBuildDexDir = null;
+		mOutputBuildResDirPath = null;
 		mOutputAppBaseDir      = null;
 		mOutputDexDir          = null;
 		mOutputAppBundle       = null;
@@ -119,7 +121,6 @@ public class FilePaths {
 		}
 
 		if(BundleDecompiler.mBundleDecompile && new File(mDebugAppDirPath).exists()) {
-			System.out.println("mBundleDecompile");
 			FileUtils.deleteDirectory(new File(mDebugAppDirPath));
 		}
 		if(BundleDecompiler.mBundleBuild) {
@@ -131,17 +132,14 @@ public class FilePaths {
 				FileUtils.forceDelete(new File(mInstallApksPath));
 			}
 		}
-
 	}
 
 	public static void setFilePath(String mInput_File_Dir, String mOutput_File_Dir) throws Exception {
-
 		if(BundleDecompiler.mBundleDecompile){
 			mInputFilePath    = mInput_File_Dir;
-			mDebugDirPath     = mOutput_File_Dir;
+			mDebugAppDirPath  = mDebugDirPath= mOutput_File_Dir;
 			mInputFileName    = new File(mInputFilePath).getName().replace(aab, "");
 			mTempDirPath      = mDebugDirPath + File.separator + mTempName;
-			mDebugAppDirPath  = mDebugDirPath + File.separator + mInputFileName;
 		}
 
 		if(BundleDecompiler.mBundleBuild){
@@ -151,8 +149,8 @@ public class FilePaths {
 			mInputFileName    = new File(mOutputAppBundle).getName().replace(aab, "");
 			mTempDirPath      = new File(mOutputAppBundle).getParent()+File.separator+mTempName;
 			mOutputDirPath    = new File(mOutputAppBundle).getParent();
-			mInstallApksPath      = mOutputDirPath + File.separator +mUniversal+ apk+"s";
-			mSignedAppBundle      = mOutputDirPath + File.separator + signedName +mInputFileName+ aab;
+			mInstallApksPath  = mOutputDirPath + File.separator + mUniversal + apk+"s";
+			mSignedAppBundle  = mOutputDirPath + File.separator + signedName +mInputFileName+ aab;
 		}
 
 		mDebugAppBaseDirPath   = mDebugAppDirPath + File.separator +mBaseName;
@@ -162,9 +160,9 @@ public class FilePaths {
 		mDebugBaseApkPath      = mTempDirPath + File.separator + mBaseApkName;
 		mDebugApksPath         = mTempDirPath + File.separator + mUniversal + apk+"s";
 
-		mDebugBuildDirPath    = mDebugAppDirPath + File.separator  + buildName;
-		mDebugBuildDexDir     = mDebugBuildDirPath + File.separator +dexDir;
-		mDebugBuildResDirPath = mDebugBuildDirPath + File.separator +mResName;
+		mOutputBuildDirPath    = mTempDirPath + File.separator  + buildName;
+		mOutputBuildDexDir     = mOutputBuildDirPath + File.separator +dexDir;
+		mOutputBuildResDirPath = mOutputBuildDirPath + File.separator +mResName;
 
 		mOutputAppDir         = mTempDirPath + File.separator + mInputFileName;
 		mProtoApkPath         = mTempDirPath + File.separator + mProtoApkName;

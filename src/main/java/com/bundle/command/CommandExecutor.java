@@ -159,13 +159,12 @@ public class CommandExecutor {
     public ArrayList<String> getInputStream(String command, File mApkFile) throws IOException, InterruptedException {
         ArrayList<String> inputStream = new ArrayList<String>();
         String runCommand = FilePaths.mAAPT2Path + " " + command + " " + mApkFile.getAbsolutePath();
-        out.println("" + runCommand);
         Runtime rt = Runtime.getRuntime();
         Process process = rt.exec(runCommand);
         BufferedReader inputStreamReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
         String line = null;
         while ((line = inputStreamReader.readLine()) != null) {
-            System.out.println("" + line);
+            //System.out.println("" + line);
             inputStream.add(line);
         }
         process.waitFor();
@@ -173,7 +172,7 @@ public class CommandExecutor {
         inputStreamReader.close();
         final int exitValue = process.waitFor();
         process.destroy();
-        if (exitValue == 0) {
+        if (exitValue != 0) {
             System.err.println("Failed...,");
         }
         return inputStream;
@@ -228,6 +227,11 @@ public class CommandExecutor {
 
     public ArrayList<String> getResourcesTable(String command) throws IOException, InterruptedException {
         return getStreamDefaultExecutor(command, mBaseApkFile);
+    }
+
+
+    public ArrayList<String> getApkBadging(String command) throws IOException, InterruptedException {
+        return getInputStream(command, mBaseApkFile);
     }
 
     public ArrayList<String> getStringsValues(String command) throws IOException, InterruptedException {

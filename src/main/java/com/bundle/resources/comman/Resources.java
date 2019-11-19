@@ -18,4 +18,5 @@ public class Resources {
 	public static final  String mParsePackageId      = " id=";
 	public static final  String mDumpResources       = "dump resources";
 	public static final  String mDumpXmltree         = "dump xmltree";
+	public static final  String mDumpBadging         = "dump badging";
 }

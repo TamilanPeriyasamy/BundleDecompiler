@@ -3,6 +3,8 @@ package com.bundle.decompile;
 import com.bundle.main.BundleDecompiler;
 import com.bundle.resources.comman.ApplicationResources;
 import com.bundle.resources.comman.FrameworkResources;
+import com.bundle.resources.image.ImageFileDecoder;
+import com.bundle.resources.image.Res9patchStreamDecoder;
 import com.bundle.smaliConversion.SmaliManager;
 import com.bundle.utils.FilePaths;
 import com.bundle.xmlbuilder.DecodeResXMLFiles;
@@ -45,5 +47,7 @@ public class DecompileManger {
         DecodeResXMLFiles DecodeResXMLFiles = new DecodeResXMLFiles(FilePaths.mDebugBaseApkPath, FilePaths.mDebugAppBaseDirPath);
         DecodeResXMLFiles.decodeResourcesXMLFiles();
         mApplicationResources.parseValuesXmlResources();
+        //ImageFileDecoder imageFileDecode=new ImageFileDecoder();
+        //imageFileDecode.decodeImage();
     }
 }

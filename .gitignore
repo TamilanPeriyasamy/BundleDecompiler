@@ -14,3 +14,10 @@ testing/
 testing/*
 .gradle/*
 .gradle/
+src/main/java/com/bundle/recompile/*
+src/main/java/com/bundle/recompile/
+src/main/java/com/bundle/signbundle/*
+src/main/java/com/bundle/signbundle/
+src/main/java/com/bundle/resources/image/*
+src/main/java/com/bundle/resources/image/
+

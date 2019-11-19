@@ -54,7 +54,6 @@ public class ApplicationResources {
 
     public void parseApplicationResources() throws Exception {
         System.out.println("load application table...");
-        //String runCommand = FilePaths.mAAPT2Path + " dump -v " +mBaseApkFile.getAbsolutePath();
         mMainResourceTableStream= new CommandExecutor(mBaseApkFile).getResourcesTable(Resources.mDumpResources);
         parseApplicationResources(mMainResourceTableStream);
     }
@@ -184,7 +183,7 @@ public class ApplicationResources {
                 if (!mCurrentXmlFile.exists( )) {
                     new File(mCurrentXmlFile.getParent()).mkdirs();
                     mCurrentXmlFile.createNewFile();
-                    BundleAnalyze.mResXmlList.add("base/res/" + valuesDirName + File.separator + xmlFileName);
+                    BundleAnalyze.mResorceXmlFileList.add("base/res/" + valuesDirName + File.separator + xmlFileName);
                     mValuesXmlList.add(mCurrentXmlFile.getAbsolutePath());
                 }
                 updateCurrentXmlFile(mCurrentXmlFile, mCurrentResourceEntry + "\n" + currentLine);
@@ -200,7 +199,7 @@ public class ApplicationResources {
     private void parsePublicXmlFile(ArrayList<String> mainResourcesInputStream) throws Exception {
         /** attr ,drawable ,layout ,anim ,animator ,interpolator ,raw ,plurals ,string ,dimen ,style ,bool ,integer ,color ,array ,id ,menu */
         File publicXml = new File(mMainValuesDir + File.separator + "public.xml");
-        BundleAnalyze.mResXmlList.add("base/res/values/public.xml");
+        BundleAnalyze.mResorceXmlFileList.add("base/res/values/public.xml");
         XMLBuilder mXMLBuilder = new XMLBuilder();
         Document document = mXMLBuilder.newDocument();
         Element mRootElement = document.createElement("resources");

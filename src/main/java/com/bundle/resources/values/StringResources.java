@@ -5,6 +5,7 @@ package com.bundle.resources.values;
 
 
 import com.bundle.resources.comman.ApplicationResources;
+import com.bundle.resources.comman.PatternParser;
 import com.bundle.resources.comman.Resources;
 import com.bundle.xmlbuilder.XMLBuilder;
 import org.w3c.dom.Document;
@@ -58,30 +59,16 @@ public class StringResources extends Resources {
             } else if (currentLine.trim().startsWith("(")) {
                 attributeResType = "";
                 while (currentLine!=null && !currentLine.startsWith("===========================================")) {
-                    if(currentLine.trim().contains(") \"") && currentLine.contains(" src=")) {
-                        String tmpCurrentLine = currentLine.substring(currentLine.indexOf(") \"") + 2, currentLine.lastIndexOf(" src=") + 1);
-                        attributeResType = attributeResType + tmpCurrentLine.trim();
-
-                    }else if(currentLine.trim().contains(") \"")) {
-                        String tmpCurrentLine=currentLine.substring(currentLine.indexOf(") \"") + 2);
-                        attributeResType = attributeResType+tmpCurrentLine.trim();
-
-                    } else if(currentLine.contains(" src=")) {
-						String tmpCurrentLine = currentLine.substring(0, currentLine.lastIndexOf(" src="));
-						attributeResType = attributeResType+tmpCurrentLine.trim();
-
-                    } else {
-                        attributeResType = attributeResType + currentLine.trim();
-                    }
+                    attributeResType = attributeResType + currentLine.trim();
                     currentLine = bufferedReader.readLine();
                 }
+                attributeResType= PatternParser.getString(attributeResType);
 
-                //resourceResType=resourceResType.substring(resourceResType.indexOf("\""),resourceResType.lastIndexOf("\""));
-                //attributeResType = StringEscapeUtils.escapeXml(attributeResType);
                 childElement = mDocument.createElement(resourceResType);
                 childElement.setAttribute("name", resourceResName);
                 childElement.setTextContent(attributeResType);
                 mRootElement.appendChild(childElement);
+
             } else if (currentLine.trim().startsWith("===========================================")) {
                 //System.out.println(""+currentLine);
 
