@@ -20,3 +20,5 @@ testing/
 testing/*
 .gradle/*
 .gradle/
+gradle/
+gradle/*
