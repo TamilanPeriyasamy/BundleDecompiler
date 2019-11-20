@@ -22,3 +22,4 @@ testing/*
 .gradle/
 gradle/
 gradle/*
+.gitignore
