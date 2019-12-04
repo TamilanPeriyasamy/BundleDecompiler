@@ -26,10 +26,10 @@
     --out=            Signed universal apk(.apks) file
     
 ### EXAMPLE:
-    java -jar BundleDecompiler.jar decompile --in=input_app.aab --out=output_dir
-    java -jar BundleDecompiler.jar build --in=input_dir --out=output_app.aab 
-    java -jar BundleDecompiler.jar sign-bundle --in=input_app.aab --out=output_app.aab 
-    java -jar BundleDecompiler.jar sign-universal --in=input_app.aab --out=output_app.apks
+    java -jar BundleDecompiler.jar decompile       --in=input_app.aab   --out=output_dir
+    java -jar BundleDecompiler.jar build           --in=input_dir       --out=output_app.aab 
+    java -jar BundleDecompiler.jar sign-bundle     --in=input_app.aab   --out=output_app.aab 
+    java -jar BundleDecompiler.jar sign-universal  --in=input_app.aab   --out=output_app.apks
 
 ### DOWNLOAD JAR 
   [BundleDecompiler.jar](https://github.com/TamilanPeriyasamy/BundleDecompiler/raw/master/out/BundleDecompiler.jar)  
