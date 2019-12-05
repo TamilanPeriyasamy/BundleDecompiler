@@ -18,11 +18,11 @@
     --out=            Output app bundle(.aab)  file
     
      sign-bundle      sign-bundle app bundle
-    --in=             Input app bundle(.aab)
+    --in=             Input app bundle(.aab) file
     --out=            Signed app bundle(.aab) file
     
      sign-universal   universal for sign-bundle app bundle
-    --in=             Input app bundle(.aab)
+    --in=             Input app bundle(.aab) file
     --out=            Signed universal apk(.apks) file
     
 ### EXAMPLE:
