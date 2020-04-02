@@ -22,4 +22,5 @@ testing/*
 .gradle/
 gradle/
 gradle/*
+BundleDecompiler.sh
 .gitignore
