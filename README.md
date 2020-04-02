@@ -32,4 +32,4 @@
     java -jar BundleDecompiler.jar sign-universal  --in=input_app.aab   --out=output_app.apks
 
 ### DOWNLOAD JAR 
-  [BundleDecompiler.jar](https://github.com/TamilanPeriyasamy/BundleDecompiler/raw/master/out/BundleDecompiler-0.0.1.jar)
+  [BundleDecompiler.jar](https://github.com/TamilanPeriyasamy/BundleDecompiler/raw/master/out/BundleDecompiler-0.0.2.jar)
