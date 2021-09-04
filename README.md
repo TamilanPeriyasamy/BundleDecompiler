@@ -1,6 +1,6 @@
 # BundleDecompiler
     BundleDecompiler is a tool for reverse engineering Android .aab files.
-    This tool decode .aab resources(.xml's) and sources(.dex's) and build app bundle.
+    This tool decode .aab resources(.xml's) and sources(.dex's) and build also.
  
 ### USAGE: ApkDecompiler < command > [options]
     BundleDecompiler decompile or d
