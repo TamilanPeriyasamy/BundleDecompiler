@@ -4,8 +4,11 @@ build.gradle
 gradlew
 gradlew.bat
 settings.gradle
-build/
-build/*
+build/classes/
+build/generated/
+build/reports/
+build/resources/
+build/test-results/
 debug/
 debug/*
 output/
